@@ -3,6 +3,7 @@ import NewsItem from './NewsItem'
 // import { NotFound } from './404';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import SpinnerLoader from './spinner';
 
 export class News extends Component {
   
@@ -18,6 +19,7 @@ export class News extends Component {
   }
 
   async componentDidMount() {
+    this.setState({loading:true});
     let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=5291a290b7e64ed993555a9f3d053195&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let articlesData;
@@ -27,8 +29,10 @@ export class News extends Component {
 
         this.setState({
             articles: articlesData,
-            totalResults: parseData.totalResults
+            totalResults: parseData.totalResults,
+            loading: false
         });
+
     } else {
         articlesData = [];
     }
@@ -38,8 +42,9 @@ export class News extends Component {
     /* this.setState({
         page: this.state.page - 1
     }) */
+
+    this.setState({loading:true});
     this.state.page = this.state.page - 1;
-    console.log(this.state.page);
     this.componentDidMount();
   }
 
@@ -47,8 +52,9 @@ export class News extends Component {
     /* this.setState({
         page: this.state.page + 1
     }) */
+
+    this.setState({loading:true});
     this.state.page = this.state.page + 1;
-    console.log(this.state.page);
     this.componentDidMount();
   }
 
@@ -56,11 +62,14 @@ export class News extends Component {
     return (
       <>
         <div className="container my-2">
-            NewsMonkey - Todays top headlines
+            <div clss="heading my-1">
+              <h4 class="text-center">NewsMonkey - Todays top headlines</h4>
+            </div>
+            {this.state.loading && <SpinnerLoader/>}
             <div className='row'>
-                {this.state.articles.map (
+                {!this.state.loading && this.state.articles.map (
                         (element) => {
-                            return <div className='col-md-4' key={element.url}>
+                            return <div className='col-md-4 my-2' key={element.url}>
                                 <NewsItem title={element.title} description={element.description} imageURL={element.urlToImage} newsURL={element.url}/>
                             </div>
                         }
