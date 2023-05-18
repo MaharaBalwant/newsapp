@@ -20,7 +20,7 @@ export class News extends Component {
 
   async componentDidMount() {
     this.setState({loading:true});
-    let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=5291a290b7e64ed993555a9f3d053195&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=5291a290b7e64ed993555a9f3d053195&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let articlesData;
     if(data.status === 200){
@@ -70,7 +70,7 @@ export class News extends Component {
                 {!this.state.loading && this.state.articles.map (
                         (element) => {
                             return <div className='col-md-4 my-2' key={element.url}>
-                                <NewsItem title={element.title} description={element.description} imageURL={element.urlToImage} newsURL={element.url}/>
+                                <NewsItem title={element.title} description={element.description} imageURL={element.urlToImage} category={this.props.category} newsURL={element.url}/>
                             </div>
                         }
                     )
